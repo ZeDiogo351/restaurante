@@ -38,7 +38,7 @@ def populate_menu():
     
     conn.commit()
     conn.close()
-    print("Menu populated successfully!")
+    print("Menu atualizado com sucesso!")
 
 if __name__ == "__main__":
     populate_menu()

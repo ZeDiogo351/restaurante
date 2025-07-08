@@ -3,26 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restaurant - Home</title>
+    <title>Restaurante - Início</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+<script>
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    const body = document.body;
+
+    function updateTheme() {
+        const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        body.dataset.theme = savedTheme;
+        darkModeToggle.textContent = savedTheme === 'dark' ? 'Toggle Light Mode' : 'Toggle Dark Mode';
+    }
+
+    darkModeToggle.addEventListener('click', function() {
+        body.dataset.theme = body.dataset.theme === 'dark' ? 'light' : 'dark';
+        localStorage.setItem('theme', body.dataset.theme);
+        darkModeToggle.textContent = body.dataset.theme === 'dark' ? 'Toggle Light Mode' : 'Toggle Dark Mode';
+        const event = new Event('themeChanged');
+        window.dispatchEvent(event);
+    });
+
+    // Inicializar tema ao carregar
+    updateTheme();
+
+    // Escutar mudanças de tema
+    window.addEventListener('themeChanged', updateTheme);
+</script>
 </head>
 <body>
     <div id="loading-screen">
         <div class="loader">
             <div class="spinner"></div>
-            <h2 class="loading-text">Loading Delicious Moments...</h2>
-            <button class="interactive-btn">Tap to Speed Up</button>
+            <h2 class="loading-text">A carregar momentos deliciosos...</h2>
+            <button class="interactive-btn">Avançar</button>
         </div>
     </div>
 
     <header>
         <div class="header-overlay">
-            <h1>Welcome to Our Restaurant</h1>
+            <h1>Bem vindo ao restaurante</h1>
             <nav>
-                <a href="{{ url_for('index') }}">Home</a>
-                <a href="{{ url_for('reserve') }}">Reserve a Table</a>
-                <a href="{{ url_for('login') }}">Admin Login</a>
-                <button id="dark-mode-toggle" class="dark-mode-btn">Toggle Dark Mode</button>
+                <a href="{{ url_for('index') }}">Início</a>
+                <a href="{{ url_for('reserve') }}">Reservar mesa</a>
+                <a href="{{ url_for('login') }}">Login Administrador</a>
+                <button id="dark-mode-toggle" class="dark-mode-btn">Ligar modo escuro</button>
             </nav>
         </div>
     </header>
@@ -36,9 +60,9 @@
             {% endif %}
         {% endwith %}
         
-        <h2>Our Menu</h2>
+        <h2>Menu</h2>
         
-        <h3>Appetizers</h3>
+        <h3>Entradas</h3>
         <div class="menu-section">
             {% for item in appetizers %}
                 <div class="menu-item">
@@ -49,7 +73,7 @@
             {% endfor %}
         </div>
         
-        <h3>Main Courses</h3>
+        <h3>Pratos</h3>
         <div class="menu-section">
             {% for item in main_courses %}
                 <div class="menu-item">
@@ -60,7 +84,7 @@
             {% endfor %}
         </div>
         
-        <h3>Desserts</h3>
+        <h3>Sobremesas</h3>
         <div class="menu-section">
             {% for item in desserts %}
                 <div class="menu-item">
@@ -71,7 +95,7 @@
             {% endfor %}
         </div>
         
-        <h3>Beverages</h3>
+        <h3>Bebidas</h3>
         <div class="menu-section">
             {% for item in beverages %}
                 <div class="menu-item">
@@ -84,8 +108,8 @@
     </main>
 
     <footer>
-        <p>Contact: Rua Fictícia 123, Lisboa, Portugal</p>
-        <p>Phone: +351 21 123 4567 | Email: <a href="mailto:info@restaurante.com">info@restaurante.com</a></p>
+        <p>Morada: Rua Fictícia 123, Lisboa, Portugal</p>
+        <p>Contacto: +351 21 123 4567 | Email: <a href="mailto:info@restaurante.com">info@restaurante.com</a></p>
     </footer>
 
     <script>

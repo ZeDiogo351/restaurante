@@ -11,9 +11,9 @@
         <div class="header-overlay">
             <h1>Admin Dashboard</h1>
             <nav>
-                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('index') }}">Início</a>
                 <a href="{{ url_for('logout') }}">Logout</a>
-                <button id="dark-mode-toggle" class="dark-mode-btn">Toggle Dark Mode</button>
+                <button id="dark-mode-toggle" class="dark-mode-btn">Ligar modo escuro</button>
             </nav>
         </div>
     </header>
@@ -49,11 +49,11 @@
         <h3>Menu Items</h3>
         <table>
             <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Category</th>
-                <th>Action</th>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Preço</th>
+                <th>Categoria</th>
+                <th>Ação</th>
             </tr>
             {% for item in menu_items %}
             <tr>
@@ -61,7 +61,7 @@
                 <td>{{ item[2] }}</td>
                 <td>€{{ item[3] }}</td>
                 <td>{{ item[4] }}</td>
-                <td><a href="{{ url_for('delete_menu', id=item[0]) }}">Delete</a></td>
+                <td><a href="{{ url_for('delete_menu', id=item[0]) }}">Apagar</a></td>
             </tr>
             {% endfor %}
         </table>
@@ -69,13 +69,13 @@
         <h3>Manage Reservations</h3>
         <table>
             <tr>
-                <th>Name</th>
+                <th>Nome</th>
                 <th>Email</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>People</th>
+                <th>Data</th>
+                <th>Hora</th>
+                <th>Pessoas</th>
                 <th>Status</th>
-                <th>Action</th>
+                <th>Ação</th>
             </tr>
             {% for res in reservations %}
             <tr>

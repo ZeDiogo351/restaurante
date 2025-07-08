@@ -48,21 +48,6 @@
 }
 
 /* Modo escuro */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg-primary: #0f1419;
-        --bg-secondary: #1a2332;
-        --bg-tertiary: #242d3c;
-        --text-primary: #f7fafc;
-        --text-secondary: #e2e8f0;
-        --text-muted: #a0aec0;
-        --border-color: #2d3748;
-        --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.3);
-        --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.3);
-        --shadow-heavy: 0 10px 25px rgba(0, 0, 0, 0.4);
-    }
-}
-
 [data-theme="dark"] {
     --bg-primary: #0f1419;
     --bg-secondary: #1a2332;
@@ -315,16 +300,6 @@ nav a:hover {
     color: var(--primary-color);
     transform: scale(1.05);
     box-shadow: 0 5px 15px rgba(240, 230, 140, 0.3);
-}
-
-[data-theme="dark"] .dark-mode-btn {
-    background: var(--accent-color);
-    color: var(--primary-color);
-}
-
-[data-theme="dark"] .dark-mode-btn:hover {
-    background: var(--accent-hover);
-    color: var(--primary-color);
 }
 
 /* Container principal melhorado */
@@ -717,4 +692,14 @@ footer a:hover {
 @keyframes slideUp {
     from { transform: translateY(20px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
+}
+
+body[data-theme="dark"] .dark-mode-btn {
+    background: var(--accent-color);
+    color: var(--primary-color);
+}
+
+body[data-theme="dark"] .dark-mode-btn:hover {
+    background: var(--accent-hover);
+    color: var(--primary-color);
 }
