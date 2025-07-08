@@ -772,3 +772,24 @@ body[data-theme="dark"] .dark-mode-btn:hover {
     background: var(--accent-hover);
     color: var(--primary-color);
 }
+
+/* Estilos padrão */
+.container {
+  width: 90%;
+  font-size: 16px;
+}
+
+/* Para telas menores (ex.: telemóveis) */
+@media (max-width: 600px) {
+  .container {
+    width: 100%;
+    font-size: 14px;
+  }
+  img {
+    width: 100%; /* Imagens se ajustam à tela */
+    height: auto;
+  }
+  button {
+    width: 100%; /* Botões ocupam a largura total */
+  }
+}
