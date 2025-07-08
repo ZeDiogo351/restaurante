@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+<script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('{{ url_for('static', filename='service-worker.js') }}')
+            .then(() => console.log('Service Worker Registered'))
+            .catch((error) => console.log('Service Worker Registration Failed:', error));
+    }
+</script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('dark-mode-toggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            document.querySelector('main').classList.toggle('dark-mode');
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.toggle('dark-mode'));
+            document.querySelectorAll('table').forEach(table => table.classList.toggle('dark-mode'));
+            document.querySelectorAll('.flash').forEach(flash => flash.classList.toggle('dark-mode'));
+            document.querySelector('footer').classList.toggle('dark-mode');
+        });
+    });
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Admin Dashboard</h1>
+        <nav>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+    </header>
+    
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <h2>Manage Menu</h2>
+        <form method="POST" action="{{ url_for('add_menu') }}">
+            <label for="name">Nome:</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="description">Descrição:</label>
+            <textarea id="description" name="description"></textarea>
+            
+            <label for="price">Preço(€):</label>
+            <input type="number" id="price" name="price" step="0.01" required>
+            
+            <label for="category">Categoria:</label>
+            <select id="category" name="category">
+                <option value="Appetizer">Entrada</option>
+                <option value="Main Course">Prato principal</option>
+                <option value="Dessert">Sobremesa</option>
+            </select>
+            
+            <button type="submit">Adicionar</button>
+        </form>
+        
+        <h3>Menu Items</h3>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Action</th>
+            </tr>
+            {% for item in menu_items %}
+                <tr>
+                    <td>{{ item[1] }}</td>
+                    <td>{{ item[2] }}</td>
+                    <td>€{{ item[3] }}</td>
+                    <td>{{ item[4] }}</td>
+                    <td><a href="{{ url_for('delete_menu', id=item[0]) }}" onclick="return confirm('Are you sure?')">Delete</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+        
+        <h2>Manage Reservations</h2>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>People</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            {% for res in reservations %}
+                <tr>
+                    <td>{{ res[1] }}</td>
+                    <td>{{ res[2] }}</td>
+                    <td>{{ res[3] }}</td>
+                    <td>{{ res[4] }}</td>
+                    <td>{{ res[5] }}</td>
+                    <td>{{ res[6] }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('update_status', id=res[0]) }}">
+                            <select name="status">
+                                <option value="Pending" {% if res[6] == 'Pending' %}selected{% endif %}>Pending</option>
+                                <option value="Confirmed" {% if res[6] == 'Confirmed' %}selected{% endif %}>Confirmed</option>
+                                <option value="Cancelled" {% if res[6] == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                            </select>
+                            <button type="submit">Update</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </main>
+</body>
+</html>

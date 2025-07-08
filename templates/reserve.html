@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+<script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('{{ url_for('static', filename='service-worker.js') }}')
+            .then(() => console.log('Service Worker Registered'))
+            .catch((error) => console.log('Service Worker Registration Failed:', error));
+    }
+</script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('dark-mode-toggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            document.querySelector('main').classList.toggle('dark-mode');
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.toggle('dark-mode'));
+            document.querySelectorAll('table').forEach(table => table.classList.toggle('dark-mode'));
+            document.querySelectorAll('.flash').forEach(flash => flash.classList.toggle('dark-mode'));
+            document.querySelector('footer').classList.toggle('dark-mode');
+        });
+    });
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Reserva</h1>
+        <nav>
+            <a href="{{ url_for('index') }}">Página inicial</a>
+            <a href="{{ url_for('login') }}">Admin Login</a>
+        </nav>
+    </header>
+    
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST" action="{{ url_for('reserve') }}">
+            <label for="name">Nome:</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="date">Data:</label>
+            <input type="date" id="date" name="date" required>
+            
+            <label for="time">Hora:</label>
+            <input type="time" id="time" name="time" required>
+            
+            <label for="people">Número de pessoas:</label>
+            <input type="number" id="people" name="people" min="1" required>
+            
+            <button type="submit">Confirmar reserva</button>
+        </form>
+    </main>
+</body>
+</html>
