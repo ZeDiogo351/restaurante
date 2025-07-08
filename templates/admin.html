@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Painel Administrador</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <header>
         <div class="header-overlay">
-            <h1>Admin Dashboard</h1>
+            <h1>Painel Administrador</h1>
             <nav>
                 <a href="{{ url_for('index') }}">Início</a>
                 <a href="{{ url_for('logout') }}">Logout</a>
@@ -27,7 +27,7 @@
             {% endif %}
         {% endwith %}
         
-        <h2>Manage Menu</h2>
+        <h2>Gerir Menu</h2>
         
         <form method="POST" action="{{ url_for('add_menu') }}">
             <label for="name">Nome:</label>
@@ -46,7 +46,7 @@
             <button type="submit">Adicionar</button>
         </form>
         
-        <h3>Menu Items</h3>
+        <h3>Pratos no Menu</h3>
         <table>
             <tr>
                 <th>Nome</th>
@@ -66,7 +66,7 @@
             {% endfor %}
         </table>
         
-        <h3>Manage Reservations</h3>
+        <h3>Gerir Reservas</h3>
         <table>
             <tr>
                 <th>Nome</th>
@@ -88,11 +88,11 @@
                 <td>
                     <form method="POST" action="{{ url_for('update_status', id=res[0]) }}">
                         <select name="status">
-                            <option value="Pending" {% if res[6] == 'Pending' %}selected{% endif %}>Pending</option>
-                            <option value="Confirmed" {% if res[6] == 'Confirmed' %}selected{% endif %}>Confirmed</option>
-                            <option value="Cancelled" {% if res[6] == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                            <option value="Pending" {% if res[6] == 'Pending' %}selected{% endif %}>Por confirmar</option>
+                            <option value="Confirmed" {% if res[6] == 'Confirmed' %}selected{% endif %}>Confirmado</option>
+                            <option value="Cancelled" {% if res[6] == 'Cancelled' %}selected{% endif %}>Cancelado</option>
                         </select>
-                        <button type="submit">Update</button>
+                        <button type="submit">Atualizar</button>
                     </form>
                 </td>
             </tr>
