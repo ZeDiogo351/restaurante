@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        :root {
+            --dynamic-primary-color: {{ user.custom_color if user.custom_color else '#8B0000' }};
+        }
+        body[data-theme="custom"] {
+            --primary-color: var(--dynamic-primary-color);
+            --primary-hover: {{ '#' + user.custom_color[1:] + '80' if user.custom_color else '#7a0000' }};
+            --gradient-primary: linear-gradient(135deg, var(--dynamic-primary-color) 0%, #A52A2A 100%);
+        }
+    </style>
+</head>
+<body data-theme="{{ user.theme_preference if user.theme_preference else 'light' }}">
+    <div id="loading-screen">
+        <div class="loader">
+            <div class="orbit-loader">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <h2 class="loading-text">Loading...</h2>
+            <button class="interactive-btn">Tap to Speed Up</button>
+        </div>
+    </div>
+
+    <header>
+        <div class="header-overlay">
+            <h1>My Account</h1>
+            <nav>
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('reserve') }}">Reserve a Table</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+                <button id="dark-mode-toggle" class="dark-mode-btn">Toggle Dark Mode</button>
+            </nav>
+        </div>
+    </header>
+    
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST" action="{{ url_for('account') }}" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.profile_pic.label }}<br>
+                {{ form.profile_pic() }}<br>
+                {% if user.profile_pic_url %}
+                    <img id="preview" src="{{ user.profile_pic_url }}" alt="Profile Picture" style="max-width: 150px; margin-top: var(--spacing-md);">
+                {% endif %}
+                {% for error in form.profile_pic.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.name.label }}<br>
+                {{ form.name(size=32) }}<br>
+                {% for error in form.name.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.email.label }}<br>
+                {{ form.email(size=32) }}<br>
+                {% for error in form.email.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.birthdate.label }}<br>
+                {{ form.birthdate }}<br>
+                {% for error in form.birthdate.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.password.label }}<br>
+                {{ form.password(size=32, placeholder="Leave blank to keep current") }}<br>
+                {% for error in form.password.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <!-- Seção de Personalização -->
+            <h3>Personalize Your Account</h3>
+            <div>
+                {{ form.theme_preference.label }}<br>
+                {{ form.theme_preference() }}<br>
+                {% for error in form.theme_preference.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.custom_color.label }}<br>
+                <input type="color" id="custom_color_picker" name="custom_color_picker" value="{{ user.custom_color if user.custom_color else '#8B0000' }}" onchange="document.getElementById('custom_color').value = this.value">
+                {{ form.custom_color(size=7, style="display: none;") }}<br>
+                {% for error in form.custom_color.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.bio.label }}<br>
+                {{ form.bio(cols=40, rows=4) }}<br>
+                {% for error in form.bio.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.submit() }}
+            </div>
+        </form>
+    </main>
+
+    <footer>
+        <p>Contact: Rua Fictícia 123, Lisboa, Portugal</p>
+        <p>Phone: +351 21 123 4567 | Email: <a href="/cdn-cgi/l/email-protection#533a3d353c1321362027322621323d27367d303c3e"><span class="__cf_email__" data-cfemail="85ecebe3eac5f7e0f6f1e4f0f7e4ebf1e0abe6eae8">[email&#160;protected]</span></a></p>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        window.onload = function() {
+            const loadingScreen = document.getElementById('loading-screen');
+            const interactiveBtn = document.querySelector('.interactive-btn');
+            let loadTime = 2000;
+
+            interactiveBtn.addEventListener('click', function() {
+                loadTime = Math.max(500, loadTime - 500);
+                interactiveBtn.style.transform = 'scale(1.2)';
+                setTimeout(() => interactiveBtn.style.transform = 'scale(1)', 100);
+            });
+
+            setTimeout(() => {
+                loadingScreen.style.opacity = '0';
+                loadingScreen.style.pointerEvents = 'none';
+                setTimeout(() => loadingScreen.style.display = 'none', 500);
+                document.body.style.overflow = 'auto';
+            }, loadTime);
+
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const body = document.body;
+            const themeSelect = document.getElementById('theme_preference');
+
+            function updateTheme() {
+                const savedTheme = themeSelect ? themeSelect.value : (localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+                body.dataset.theme = savedTheme;
+                darkModeToggle.textContent = savedTheme === 'dark' ? 'Toggle Light Mode' : 'Toggle Dark Mode';
+                if (savedTheme === 'custom' && document.getElementById('custom_color').value) {
+                    body.dataset.theme = 'custom';
+                }
+                localStorage.setItem('theme', savedTheme);
+            }
+
+            darkModeToggle.addEventListener('click', function() {
+                body.dataset.theme = body.dataset.theme === 'dark' ? 'light' : 'dark';
+                localStorage.setItem('theme', body.dataset.theme);
+                darkModeToggle.textContent = body.dataset.theme === 'dark' ? 'Toggle Light Mode' : 'Toggle Dark Mode';
+                if (themeSelect) themeSelect.value = body.dataset.theme;
+                window.dispatchEvent(new Event('themeChanged'));
+            });
+
+            if (themeSelect) {
+                themeSelect.addEventListener('change', updateTheme);
+            }
+
+            updateTheme();
+            window.addEventListener('themeChanged', updateTheme);
+
+            const profilePicInput = document.getElementById('profile_pic');
+            const preview = document.getElementById('preview');
+            if (profilePicInput) {
+                profilePicInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            if (preview) preview.src = event.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        };
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'95c09f0e4bc2edec',t:'MTc1MTk4ODYxMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

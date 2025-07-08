@@ -2,23 +2,10 @@
 <html lang="en">
 <head>
     
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('dark-mode-toggle').addEventListener('click', function() {
-            document.body.classList.toggle('dark-mode');
-            document.querySelector('main').classList.toggle('dark-mode');
-            document.querySelectorAll('.menu-item').forEach(item => item.classList.toggle('dark-mode'));
-            document.querySelectorAll('table').forEach(table => table.classList.toggle('dark-mode'));
-            document.querySelectorAll('.flash').forEach(flash => flash.classList.toggle('dark-mode'));
-            document.querySelector('footer').classList.toggle('dark-mode');
-        });
-    });
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registar Admin</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-
 </head>
 <body>
     <header>
@@ -48,5 +35,5 @@
             <button type="submit">Registar</button>
         </form>
     </main>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'95c0a06e1f65edec',t:'MTc1MTk4ODY2Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
