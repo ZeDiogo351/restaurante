@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -105,17 +105,25 @@
         const darkModeToggle = document.getElementById('dark-mode-toggle');
         const body = document.body;
 
+        function updateTheme() {
+            const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            body.dataset.theme = savedTheme;
+            darkModeToggle.textContent = savedTheme === 'dark' ? 'Toggle Light Mode' : 'Toggle Dark Mode';
+        }
+
         darkModeToggle.addEventListener('click', function() {
             body.dataset.theme = body.dataset.theme === 'dark' ? 'light' : 'dark';
             localStorage.setItem('theme', body.dataset.theme);
-
+            darkModeToggle.textContent = body.dataset.theme === 'dark' ? 'Toggle Light Mode' : 'Toggle Dark Mode';
             const event = new Event('themeChanged');
             window.dispatchEvent(event);
         });
 
-        // Carregar tema salvo
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        body.dataset.theme = savedTheme;
+        // Inicializar tema ao carregar
+        updateTheme();
+
+        // Escutar mudanças de tema em todas as páginas
+        window.addEventListener('themeChanged', updateTheme);
     </script>
 </body>
 </html>

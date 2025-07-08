@@ -2,12 +2,12 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 import sqlite3
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+import os
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key'  # Replace with a secure key in production
 
 # Database initialization
-
 def init_db():
     conn = sqlite3.connect('restaurant.db')
     c = conn.cursor()
@@ -44,6 +44,8 @@ def get_db_connection():
 
 @app.route('/')
 def index():
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
     conn = get_db_connection()
     c = conn.cursor()
     c.execute("SELECT * FROM menu WHERE category = 'Appetizer'")
@@ -52,8 +54,10 @@ def index():
     main_courses = c.fetchall()
     c.execute("SELECT * FROM menu WHERE category = 'Dessert'")
     desserts = c.fetchall()
+    c.execute("SELECT * FROM menu WHERE category = 'Beverage'")
+    beverages = c.fetchall()
     conn.close()
-    return render_template('index.html', appetizers=appetizers, main_courses=main_courses, desserts=desserts)
+    return render_template('index.html', appetizers=appetizers, main_courses=main_courses, desserts=desserts, beverages=beverages)
 
 @app.route('/reserve', methods=['GET', 'POST'])
 def reserve():
@@ -185,60 +189,4 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
-
-from flask import Flask, render_template, request, redirect, url_for, flash, session
-import sqlite3
-from datetime import datetime
-from werkzeug.security import generate_password_hash, check_password_hash
-
-app = Flask(__name__)
-app.secret_key = 'your-secret-key'  # Replace with a secure key
-
-# Lista de usuários autorizados (email e senha hash)
-AUTH_USERS = {
-    'user1@example.com': generate_password_hash('password1'),
-    'user2@example.com': generate_password_hash('password2'),
-    'user3@example.com': generate_password_hash('password3')
-}
-
-# ... (outras funções como init_db, get_db_connection permanecem)
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        
-        if username in AUTH_USERS and check_password_hash(AUTH_USERS[username], password):
-            session['user_id'] = username
-            flash('Logged in successfully!', 'success')
-            return redirect(url_for('index'))
-        else:
-            flash('Invalid username or password', 'error')
-    
-    return render_template('login.html')
-
-@app.route('/')
-@app.route('/index')
-def index():
-    if not session.get('user_id'):
-        return redirect(url_for('login'))
-    conn = get_db_connection()
-    c = conn.cursor()
-    c.execute("SELECT * FROM menu WHERE category = 'Appetizer'")
-    appetizers = c.fetchall()
-    c.execute("SELECT * FROM menu WHERE category = 'Main Course'")
-    main_courses = c.fetchall()
-    c.execute("SELECT * FROM menu WHERE category = 'Dessert'")
-    desserts = c.fetchall()
-    conn.close()
-    return render_template('index.html', appetizers=appetizers, main_courses=main_courses, desserts=desserts)
-
-@app.route('/logout')
-def logout():
-    session.clear()
-    flash('Logged out successfully!', 'success')
-    return redirect(url_for('login'))
-
-# ... (outras rotas permanecem)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=True)

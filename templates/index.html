@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restaurant - Home</title>
@@ -16,7 +15,7 @@
         </div>
     </div>
 
-    <header style="background-image: url('{{ url_for('static', filename='images/header-bg.jpg') }}');">
+    <header>
         <div class="header-overlay">
             <h1>Welcome to Our Restaurant</h1>
             <nav>
@@ -71,6 +70,17 @@
                 </div>
             {% endfor %}
         </div>
+        
+        <h3>Beverages</h3>
+        <div class="menu-section">
+            {% for item in beverages %}
+                <div class="menu-item">
+                    <h4>{{ item[1] }}</h4>
+                    <p>{{ item[2] }}</p>
+                    <p class="price">€{{ item[3] }}</p>
+                </div>
+            {% endfor %}
+        </div>
     </main>
 
     <footer>
@@ -79,52 +89,48 @@
     </footer>
 
     <script>
-        // Carregar o estado do modo noturno ao iniciar a página
-        if (localStorage.getItem('dark-mode') === 'enabled') {
-            document.body.classList.add('dark-mode');
-            document.querySelector('main').classList.add('dark-mode');
-            document.querySelectorAll('.menu-item').forEach(item => item.classList.add('dark-mode'));
-            document.querySelectorAll('table').forEach(table => table.classList.add('dark-mode'));
-            document.querySelectorAll('.flash').forEach(flash => flash.classList.add('dark-mode'));
-            document.querySelector('footer').classList.add('dark-mode');
-        }
-
         // Gerenciar a tela de carregamento
         window.onload = function() {
             const loadingScreen = document.getElementById('loading-screen');
             const interactiveBtn = document.querySelector('.interactive-btn');
-            let loadTime = 3000; // 3 segundos padrão
+            let loadTime = 3000;
 
-            // Reduzir tempo ao clicar no botão interativo
             interactiveBtn.addEventListener('click', function() {
-                loadTime = Math.max(500, loadTime - 500); // Reduz para no mínimo 0.5s
+                loadTime = Math.max(500, loadTime - 500);
                 interactiveBtn.style.transform = 'scale(1.2)';
                 setTimeout(() => interactiveBtn.style.transform = 'scale(1)', 100);
             });
 
-            // Ocultar a tela de carregamento após o tempo definido
             setTimeout(() => {
                 loadingScreen.style.opacity = '0';
                 loadingScreen.style.pointerEvents = 'none';
-                setTimeout(() => loadingScreen.style.display = 'none', 500); // Transição suave
-                document.body.style.overflow = 'auto'; // Habilitar scroll
+                setTimeout(() => loadingScreen.style.display = 'none', 500);
+                document.body.style.overflow = 'auto';
             }, loadTime);
 
-            // Adicionar evento ao botão de modo noturno
-            document.getElementById('dark-mode-toggle').addEventListener('click', function() {
-                document.body.classList.toggle('dark-mode');
-                document.querySelector('main').classList.toggle('dark-mode');
-                document.querySelectorAll('.menu-item').forEach(item => item.classList.toggle('dark-mode'));
-                document.querySelectorAll('table').forEach(table => table.classList.toggle('dark-mode'));
-                document.querySelectorAll('.flash').forEach(flash => flash.classList.toggle('dark-mode'));
-                document.querySelector('footer').classList.toggle('dark-mode');
+            // Modo escuro global
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const body = document.body;
 
-                if (document.body.classList.contains('dark-mode')) {
-                    localStorage.setItem('dark-mode', 'enabled');
-                } else {
-                    localStorage.removeItem('dark-mode');
-                }
+            function updateTheme() {
+                const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                body.dataset.theme = savedTheme;
+                darkModeToggle.textContent = savedTheme === 'dark' ? 'Toggle Light Mode' : 'Toggle Dark Mode';
+            }
+
+            darkModeToggle.addEventListener('click', function() {
+                body.dataset.theme = body.dataset.theme === 'dark' ? 'light' : 'dark';
+                localStorage.setItem('theme', body.dataset.theme);
+                darkModeToggle.textContent = body.dataset.theme === 'dark' ? 'Toggle Light Mode' : 'Toggle Dark Mode';
+                const event = new Event('themeChanged');
+                window.dispatchEvent(event);
             });
+
+            // Inicializar tema ao carregar
+            updateTheme();
+
+            // Escutar mudanças de tema em todas as páginas
+            window.addEventListener('themeChanged', updateTheme);
         };
     </script>
 </body>

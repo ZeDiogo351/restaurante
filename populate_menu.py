@@ -4,29 +4,37 @@ def populate_menu():
     conn = sqlite3.connect('restaurant.db')
     c = conn.cursor()
     
-    # Entradas
+    # Entradas (Portuguesas)
     c.execute("INSERT INTO menu (name, description, price, category) VALUES (?, ?, ?, ?)",
-              ('Bruschetta', 'Torrada com tomate fresco, manjericão e azeite', 5.50, 'Appetizer'))
+              ('Ameijoas à Bulhão Pato', 'Ameijoas frescas com alho, coentros e azeite', 8.50, 'Appetizer'))
     c.execute("INSERT INTO menu (name, description, price, category) VALUES (?, ?, ?, ?)",
-              ('Sopa de Cebola', 'Sopa cremosa com queijo gratinado', 4.00, 'Appetizer'))
+              ('Pão com Paté de Sardinha', 'Pão rústico com paté artesanal de sardinha', 5.00, 'Appetizer'))
     c.execute("INSERT INTO menu (name, description, price, category) VALUES (?, ?, ?, ?)",
-              ('Salada Caprese', 'Tomate, mozzarella fresca e manjericão', 6.00, 'Appetizer'))
+              ('Queijo da Serra com Marmelada', 'Queijo curado com marmelada tradicional', 6.50, 'Appetizer'))
     
-    # Pratos Principais
+    # Pratos Principais (Portugueses)
     c.execute("INSERT INTO menu (name, description, price, category) VALUES (?, ?, ?, ?)",
-              ('Risoto de Cogumelos', 'Risoto cremoso com cogumelos silvestres', 12.50, 'Main Course'))
+              ('Bacalhau à Brás', 'Bacalhau desfiado com ovo, cebola e batata palha', 13.50, 'Main Course'))
     c.execute("INSERT INTO menu (name, description, price, category) VALUES (?, ?, ?, ?)",
-              ('Frango Assado com Batatas', 'Frango suculento com batatas rústicas', 10.00, 'Main Course'))
+              ('Cozido à Portuguesa', 'Mistura de carnes e vegetais cozidos ao estilo tradicional', 15.00, 'Main Course'))
     c.execute("INSERT INTO menu (name, description, price, category) VALUES (?, ?, ?, ?)",
-              ('Peixe Grelhado com Legumes', 'Peixe fresco com legumes sazonais', 14.00, 'Main Course'))
+              ('Arroz de Pato', 'Arroz aromático com pato desfiado e chouriço', 14.50, 'Main Course'))
     
-    # Sobremesas
+    # Sobremesas (Portuguesas)
     c.execute("INSERT INTO menu (name, description, price, category) VALUES (?, ?, ?, ?)",
-              ('Tiramisú', 'Camadas de café e mascarpone', 5.00, 'Dessert'))
+              ('Pastel de Nata', 'Clássico pastel de nata com canela', 2.50, 'Dessert'))
     c.execute("INSERT INTO menu (name, description, price, category) VALUES (?, ?, ?, ?)",
-              ('Mousse de Chocolate', 'Mousse leve com cacau puro', 4.50, 'Dessert'))
+              ('Pudim Flan', 'Pudim de ovos com caramelo', 3.00, 'Dessert'))
     c.execute("INSERT INTO menu (name, description, price, category) VALUES (?, ?, ?, ?)",
-              ('Cheesecake de Frutos Vermelhos', 'Cheesecake com topping de frutos vermelhos', 6.00, 'Dessert'))
+              ('Bolo de Mel', 'Bolo tradicional da Madeira com mel', 4.00, 'Dessert'))
+    
+    # Bebidas (Portuguesas)
+    c.execute("INSERT INTO menu (name, description, price, category) VALUES (?, ?, ?, ?)",
+              ('Vinho Verde', 'Vinho branco leve e fresco', 4.50, 'Beverage'))
+    c.execute("INSERT INTO menu (name, description, price, category) VALUES (?, ?, ?, ?)",
+              ('Ginja', 'Licor de ginja servido em copo de chocolate', 3.00, 'Beverage'))
+    c.execute("INSERT INTO menu (name, description, price, category) VALUES (?, ?, ?, ?)",
+              ('Sumo de Laranja Natural', 'Sumo fresco espremido na hora', 2.50, 'Beverage'))
     
     conn.commit()
     conn.close()
